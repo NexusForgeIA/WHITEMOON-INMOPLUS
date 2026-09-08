@@ -101,15 +101,20 @@ h3,h4{font-family:var(--body);font-weight:700;color:var(--text);line-height:1.2;
 .nav.scrolled{background:rgba(255,255,255,.95);border-bottom-color:var(--line);box-shadow:0 1px 20px rgba(20,20,20,.06)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;height:var(--nav-h)}
 .brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
-/* Tinte suave detrás del logo: la luna tiene zonas blancas que se perderían
-   sobre fondo blanco puro. */
-.brand__mark{
-  width:46px;height:46px;border-radius:14px;background:var(--negro-chip);
-  border:1px solid var(--line);display:grid;place-items:center;flex-shrink:0;
+/* El PNG del logo ya lleva la palabra "Inmoplus": aquí no se repite el texto.
+   Se fija la altura y width:auto respeta el ratio 4.45:1 del original; los
+   atributos width/height del <img> reservan el hueco y mantienen el CLS a 0. */
+.brand__logo{height:30px;width:auto;display:block;flex-shrink:0}
+/* Bajada de marca, separada por un filete fino. Se parte en dos líneas para
+   no ensanchar la cabecera y dejar sitio a los siete enlaces del nav. */
+.brand__sub{
+  font-family:var(--body);font-weight:700;font-size:.58rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--m-ink);line-height:1.35;
+  padding-left:12px;border-left:1px solid var(--line-2);
 }
-.brand__mark img{width:32px;height:auto}
-.brand__txt b{font-family:var(--display);font-weight:600;font-size:1.1rem;color:var(--text);line-height:1.1;display:block;letter-spacing:-.02em}
-.brand__txt small{font-family:var(--body);font-weight:700;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--negro-2);display:block;margin-top:2px}
+.foot-brand .brand__logo{height:35px}
+/* Por debajo de 420px la bajada estorba al botón de menú. */
+@media (max-width:420px){.nav .brand__sub{display:none}}
 .nav-links{display:flex;align-items:center;gap:26px}
 .nav-links a{font-size:.9rem;font-weight:500;color:var(--muted);position:relative;padding:6px 0;white-space:nowrap;transition:color .22s}
 .nav-links a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:2px;border-radius:2px;background:var(--m);transition:right .28s}
