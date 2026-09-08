@@ -350,16 +350,6 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 @keyframes msgin{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
 @keyframes typing{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
 
-/* ---------- Aviso simple del chat ----------
-   Rosa profundo #000000 sobre rosa muy claro #fbf3de = 6.75:1. El rosa
-   pastel solo pinta el borde y el disco del check, nunca texto. */
-
-   desborda, y con `overflow:hidden` la altura mínima automática de un item
-   flex pasa a ser 0. Sin esto la tarjeta se aplasta a la altura del borde. */
-/* flex-wrap y no grid: si el valor no cabe al lado de la etiqueta (nombres
-   largos, "viernes, 4 de septiembre de 2026" a 360 px), baja a su propia
-   línea en vez de apretarse. */
-
 /* ---------- RESPONSIVE ---------- */
 @media (max-width:1080px){
   .nav-links{display:none}
@@ -419,8 +409,10 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 .wm-fab.hidden{display:none}
 @media(min-width:768px){.wm-fab{right:24px;bottom:24px;width:60px;height:60px}}
 
+/* z-index por encima del nav (900): en movil el chat va a pantalla completa
+   y con un z-index menor la cabecera fija tapaba su titulo y la X de cerrar. */
 .wm-chat{
-  position:fixed;right:16px;bottom:16px;z-index:80;
+  position:fixed;right:16px;bottom:16px;z-index:1000;
   width:min(370px,calc(100vw - 32px));max-height:min(640px,calc(100vh - 32px));
   display:none;flex-direction:column;overflow:hidden;
   background:var(--white);border:1px solid var(--line-2);border-radius:20px;
