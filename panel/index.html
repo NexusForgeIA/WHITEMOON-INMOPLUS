@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Inmoplus · Panel IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080d;--bg2:#0e0e16;--card:#111118;--card2:#15151f;
+  --p:#7c4dff;--p2:#9d70ff;--g:#00d4aa;--gold:#f5c842;
+  --text:#f0f0f5;--muted:#8888a0;--faint:#5b5b70;
+  --border:rgba(124,77,255,0.18);--line:rgba(240,240,245,0.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Sora',system-ui,sans-serif;font-weight:300;line-height:1.5}
+input,select,textarea,button{font-family:inherit}
+a{color:inherit}
+.hidden{display:none!important}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* login */
+#login{position:fixed;inset:0;background:radial-gradient(900px 500px at 70% -10%,rgba(124,77,255,.14),transparent 60%),var(--bg);display:flex;align-items:center;justify-content:center;z-index:50}
+.loginbox{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:38px 34px;width:min(400px,92vw);text-align:center}
+.loginbox .lg{font-size:22px;font-weight:700;letter-spacing:-.3px}
+.loginbox .lg b{color:var(--p2)}
+.loginbox p{color:var(--muted);font-size:13px;margin:8px 0 22px}
+.loginbox input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);padding:14px 16px;border-radius:10px;font-size:15px;margin-bottom:12px}
+.loginbox input:focus{outline:none;border-color:var(--p)}
+.btn{background:var(--p);color:#fff;border:0;border-radius:9px;padding:13px 22px;font-weight:500;font-size:14px;cursor:pointer;transition:.2s}
+.btn:hover{background:var(--p2)}
+.btn.full{width:100%}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.ghost:hover{border-color:var(--p2)}
+.btn.gold{background:var(--gold);color:#2a2205}
+.err{color:#ff8080;font-size:12.5px;min-height:16px;margin-top:6px}
+.hint{color:var(--faint);font-size:11px;margin-top:14px}
+
+/* header */
+header{border-bottom:1px solid var(--line);background:var(--bg2);position:sticky;top:0;z-index:20}
+.hd{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-weight:700;font-size:18px;letter-spacing:-.3px}
+.brand b{color:var(--p2)}.brand span{color:var(--gold);font-weight:600}
+.hd .r{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--muted)}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+.kpi b{font-size:30px;font-weight:700;display:block;line-height:1}
+.kpi span{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--faint)}
+.kpi.n b{color:var(--g)}.kpi.s b{color:var(--gold)}.kpi.v b{color:var(--p2)}
+
+/* tabs */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:22px;flex-wrap:wrap}
+.tab{background:none;border:0;color:var(--muted);padding:12px 16px;font-size:14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--text);border-bottom-color:var(--p)}
+.tab:hover{color:var(--text)}
+.panel{padding-bottom:60px}
+
+/* leads */
+.lead{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:12px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+.lead .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lead .nm{font-weight:600;font-size:15px}
+.lead .stars{color:var(--gold);letter-spacing:2px;font-size:13px}
+.lead .meta{color:var(--muted);font-size:12.5px;margin-top:5px}
+.lead .meta b{color:var(--text);font-weight:500}
+.lead .res{color:var(--muted);font-size:12.5px;margin-top:7px;font-style:italic}
+.lead .tel{color:var(--p2);font-size:13px;font-weight:500;margin-top:6px}
+.lead .side{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+select.estado{background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 10px;font-size:12.5px;cursor:pointer}
+.pill{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:100px;border:1px solid var(--border)}
+.pill.nuevo{color:var(--g);border-color:rgba(0,212,170,.4)}
+.pill.en_seguimiento{color:var(--gold);border-color:rgba(245,200,66,.4)}
+.pill.visita{color:var(--p2);border-color:var(--border)}
+.pill.descartado{color:var(--faint)}
+
+/* cards / forms */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
+.box h3{font-size:15px;font-weight:600;margin-bottom:4px}
+.box .sub{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+.fld{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);padding:11px 13px;border-radius:9px;font-size:14px}
+.fld:focus{outline:none;border-color:var(--p)}
+textarea.fld{min-height:120px;resize:vertical}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.out{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:14px;font-size:13px;white-space:pre-wrap;color:var(--text)}
+.out .k{color:var(--p2);font-weight:500}
+.warn{color:var(--gold);font-size:12px}
+.recbox{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px}
+.recbox h4{font-size:13px;letter-spacing:.5px;margin-bottom:10px;color:var(--p2)}
+.recitem{font-size:13px;color:var(--muted);padding:7px 0;border-top:1px solid var(--line)}
+.recitem:first-of-type{border-top:0}
+.recitem b{color:var(--text);font-weight:500}
+.spin{color:var(--faint);font-size:13px}
+
+/* propiedades */
+.drop{border:1px dashed var(--border);border-radius:10px;padding:18px;text-align:center;color:var(--muted);font-size:12.5px;cursor:pointer;transition:.2s}
+.drop:hover,.drop.over{border-color:var(--p);color:var(--text);background:rgba(124,77,255,.05)}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.thumb{position:relative;width:74px;height:74px;border-radius:9px;overflow:hidden;border:1px solid var(--border)}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb .x{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.62);color:#fff;border:0;border-radius:6px;width:20px;height:20px;cursor:pointer;font-size:13px;line-height:1}
+.chk{display:flex;align-items:center;gap:8px;color:var(--text);font-size:13px;margin:0}
+.chk input{width:auto}
+.prop{display:grid;grid-template-columns:66px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.prop:first-child{border-top:0}
+.prop .ph{width:66px;height:66px;border-radius:9px;object-fit:cover;background:linear-gradient(135deg,#1a1428,#241a3a);border:1px solid var(--border)}
+.prop .nb{font-weight:500;font-size:14px}
+.prop .mt{color:var(--muted);font-size:12px;margin-top:3px}
+.prop .badges{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.prop .ops{display:flex;flex-direction:column;gap:6px}
+.mini{font-size:11px;padding:6px 9px;border-radius:7px;background:var(--card2);border:1px solid var(--border);color:var(--text);cursor:pointer;transition:.2s}
+.mini:hover{border-color:var(--p2)}
+.mini.del:hover{border-color:#ff8080;color:#ff8080}
+.tg{font-size:10px;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:100px;border:1px solid var(--border);color:var(--muted)}
+.tg.on{color:var(--g);border-color:rgba(0,212,170,.4)}
+.tg.gold{color:var(--gold);border-color:rgba(245,200,66,.4)}
+@media(max-width:820px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.lead{grid-template-columns:1fr}.prop{grid-template-columns:56px 1fr}.prop .ops{grid-column:1/-1;flex-direction:row}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="loginbox">
+    <div class="lg">Inmo<b>plus</b> · <span>Panel IA</span></div>
+    <p>Introduce la clave del panel para entrar.</p>
+    <input id="key" type="password" placeholder="Clave del panel" autocomplete="off">
+    <button class="btn full" id="enter">Entrar</button>
+    <div class="err" id="loginErr"></div>
+    <div class="hint">Demo · clave: inmoplusdemo2026</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header><div class="wrap hd">
+    <div class="brand">Inmo<b>plus</b> · <span>Panel de captación IA</span></div>
+    <div class="r"><span id="clock"></span><button class="btn ghost" id="logout" style="padding:8px 14px">Salir</button></div>
+  </div></header>
+
+  <div class="wrap">
+    <div class="kpis">
+      <div class="kpi"><b id="k_total">–</b><span>Leads totales</span></div>
+      <div class="kpi n"><b id="k_nuevos">–</b><span>Nuevos</span></div>
+      <div class="kpi s"><b id="k_seg">–</b><span>En seguimiento</span></div>
+      <div class="kpi v"><b id="k_vis">–</b><span>Visitas</span></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab on" data-t="leads">Leads</button>
+      <button class="tab" data-t="rec">Recordatorios</button>
+      <button class="tab" data-t="cap">Captar lead</button>
+      <button class="tab" data-t="anun">Anuncio IA</button>
+      <button class="tab" data-t="doc">Leer documento</button>
+      <button class="tab" data-t="prop">Propiedades</button>
+    </div>
+
+    <div class="panel" id="p_leads"></div>
+
+    <div class="panel hidden" id="p_rec">
+      <button class="btn gold" id="sendRec" style="margin-bottom:16px">Enviar recordatorios a Telegram</button>
+      <div id="recView" class="spin">Cargando…</div>
+    </div>
+
+    <div class="panel hidden" id="p_cap">
+      <div class="box" style="max-width:560px">
+        <h3>Captar y cualificar un lead</h3>
+        <div class="sub">La IA clasifica operación, zona y presupuesto, puntúa el lead y avisa por Telegram.</div>
+        <label>Nombre</label><input class="fld" id="c_nombre" placeholder="Nombre del interesado">
+        <label>Teléfono</label><input class="fld" id="c_tel" placeholder="6XXXXXXXX">
+        <label>Qué busca (mensaje)</label><textarea class="fld" id="c_msg" placeholder="Ej: Busco piso de 3 hab con terraza en Las Rozas para comprar, hasta 300.000 €"></textarea>
+        <button class="btn full" id="c_go" style="margin-top:14px">Cualificar y guardar</button>
+        <div id="c_out"></div>
+      </div>
+    </div>
+
+    <div class="panel hidden" id="p_anun">
+      <div class="grid2">
+        <div class="box">
+          <h3>Generar anuncio con IA</h3>
+          <div class="sub">Borrador de título, descripción y ficha. Solo con los datos que introduces.</div>
+          <div class="row"><div><label>Operación</label><select class="fld" id="a_op"><option>venta</option><option>alquiler</option></select></div><div><label>Tipo</label><input class="fld" id="a_tipo" placeholder="piso, chalet…"></div></div>
+          <label>Zona</label><input class="fld" id="a_zona" placeholder="Majadahonda">
+          <div class="row"><div><label>m²</label><input class="fld" id="a_m2" placeholder="95"></div><div><label>Hab.</label><input class="fld" id="a_hab" placeholder="3"></div><div><label>Baños</label><input class="fld" id="a_ban" placeholder="2"></div></div>
+          <label>Precio</label><input class="fld" id="a_precio" placeholder="320000">
+          <label>Extras (separados por comas)</label><input class="fld" id="a_extras" placeholder="terraza, garaje, exterior">
+          <button class="btn full" id="a_go" style="margin-top:14px">Generar borrador</button>
+        </div>
+        <div class="box"><h3>Resultado</h3><div class="sub">Revísalo y añade fotos antes de publicar.</div><div id="a_out" class="spin">—</div></div>
+      </div>
+    </div>
+
+    <div class="panel hidden" id="p_doc">
+      <div class="grid2">
+        <div class="box">
+          <h3>Leer nota simple / arras</h3>
+          <div class="sub">La IA extrae los datos; los importes los cuadra el sistema. Verifica siempre el original.</div>
+          <label>Tipo de documento</label><select class="fld" id="d_tipo"><option value="arras">Contrato de arras</option><option value="nota_simple">Nota simple</option></select>
+          <label>Texto del documento</label><textarea class="fld" id="d_texto" style="min-height:180px" placeholder="Pega aquí el texto del documento…"></textarea>
+          <button class="btn full" id="d_go" style="margin-top:14px">Extraer datos</button>
+        </div>
+        <div class="box"><h3>Datos extraídos</h3><div class="sub">Borrador de lectura automática.</div><div id="d_out" class="spin">—</div></div>
+      </div>
+    </div>
+
+    <div class="panel hidden" id="p_prop">
+      <div class="grid2">
+        <div class="box">
+          <h3 id="propFormTitle">Nueva propiedad</h3>
+          <div class="sub">Rellena los datos, sube fotos y publícala. La web se actualiza al instante.</div>
+          <input type="hidden" id="pr_id">
+          <label>Título</label><input class="fld" id="pr_titulo" placeholder="Ej: Chalet con piscina en Majadahonda">
+          <div class="row">
+            <div><label>Operación</label><select class="fld" id="pr_tipo"><option value="venta">Venta</option><option value="alquiler">Alquiler</option></select></div>
+            <div><label>Precio (€)</label><input class="fld" id="pr_precio" placeholder="320000"></div>
+          </div>
+          <label>Zona</label><input class="fld" id="pr_zona" placeholder="Majadahonda">
+          <div class="row">
+            <div><label>m²</label><input class="fld" id="pr_m2" placeholder="95"></div>
+            <div><label>Hab.</label><input class="fld" id="pr_hab" placeholder="3"></div>
+            <div><label>Baños</label><input class="fld" id="pr_ban" placeholder="2"></div>
+          </div>
+          <label>Descripción</label><textarea class="fld" id="pr_desc" placeholder="Descripción de la vivienda…"></textarea>
+          <label>Fotos</label>
+          <div class="drop" id="pr_drop">Arrastra fotos aquí o haz clic · JPG, PNG, WebP (máx 8 MB)</div>
+          <input type="file" id="pr_file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+          <div class="thumbs" id="pr_thumbs"></div>
+          <div class="row" style="margin-top:14px">
+            <label class="chk"><input type="checkbox" id="pr_pub"> Publicada (visible en la web)</label>
+            <label class="chk"><input type="checkbox" id="pr_dest"> Destacada</label>
+          </div>
+          <div class="row" style="margin-top:14px">
+            <button class="btn" id="pr_save">Guardar propiedad</button>
+            <button class="btn ghost" id="pr_reset">Nueva / Cancelar</button>
+          </div>
+          <div id="pr_msg"></div>
+        </div>
+        <div class="box">
+          <h3>Cartera (<span id="pr_count">0</span>)</h3>
+          <div class="sub">Las publicadas aparecen en la web. Edita, publica o elimina cualquiera.</div>
+          <div id="pr_list" class="spin">Cargando…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SB="https://mlaqtniujnvfxcvcourm.supabase.co";
+const FN=SB+"/functions/v1/";
+const APIKEY="sb_publishable_6no6BuOgiA_2nonTJntAuQ_DTqEgrcV"; // pública por diseño
+let KEY="";
+const ESTADOS=["nuevo","en_seguimiento","visita","descartado"];
+const $=s=>document.querySelector(s);
+
+async function api(fn,body){
+  const r=await fetch(FN+fn,{method:"POST",headers:{"Content-Type":"application/json","apikey":APIKEY,"Authorization":"Bearer "+APIKEY},body:JSON.stringify(body||{})});
+  try{return await r.json();}catch(e){return {ok:false,error:"Respuesta no válida"};}
+}
+function stars(n){n=parseInt(n)||0;return "★".repeat(n)+"☆".repeat(5-n);}
+function eur(v){return v?Number(v).toLocaleString("es-ES")+" €":"";}
+
+/* login */
+$("#enter").onclick=login;
+$("#key").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+async function login(){
+  const k=$("#key").value.trim(); $("#loginErr").textContent="";
+  if(!k) return;
+  const d=await api("inmoplus-panel",{key:k,action:"resumen"});
+  if(!d.ok){ $("#loginErr").textContent=d.error||"No se pudo entrar."; return; }
+  KEY=k; try{sessionStorage.setItem("inmokey",k);}catch(e){}
+  $("#login").classList.add("hidden"); $("#app").classList.remove("hidden");
+  render(d);
+}
+$("#logout").onclick=()=>{try{sessionStorage.removeItem("inmokey");}catch(e){} location.reload();};
+try{const sk=sessionStorage.getItem("inmokey"); if(sk){$("#key").value=sk;}}catch(e){}
+
+/* tabs */
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on")); t.classList.add("on");
+  ["leads","rec","cap","anun","doc","prop"].forEach(n=>$("#p_"+n).classList.toggle("hidden",n!==t.dataset.t));
+  if(t.dataset.t==="prop"&&!propsLoaded){propsLoaded=true;loadProps();}
+});
+
+/* render dashboard */
+let DATA={};
+function render(d){
+  DATA=d;
+  $("#k_total").textContent=d.kpis.total; $("#k_nuevos").textContent=d.kpis.nuevos;
+  $("#k_seg").textContent=d.kpis.seguimiento; $("#k_vis").textContent=d.kpis.visitas;
+  renderLeads(d.leads||[]); renderRec(d);
+}
+function renderLeads(leads){
+  const c=$("#p_leads");
+  if(!leads.length){c.innerHTML='<div class="spin">Aún no hay leads. Prueba a captar uno en la pestaña "Captar lead".</div>';return;}
+  c.innerHTML=leads.map(l=>`
+   <div class="lead">
+     <div>
+       <div class="top"><span class="nm">${esc(l.nombre)}</span><span class="stars">${stars(l.score)}</span><span class="pill ${l.estado}">${l.estado.replace("_"," ")}</span></div>
+       <div class="meta"><b>${esc(l.operacion||"?")}</b> · ${esc(l.tipo||"?")} · ${esc(l.zona||"?")}${l.presupuesto_max?" · hasta "+eur(l.presupuesto_max):""}</div>
+       ${l.resumen_ia?`<div class="res">"${esc(l.resumen_ia)}"</div>`:""}
+       <div class="tel">${esc(l.telefono)}${l.email?" · "+esc(l.email):""}</div>
+     </div>
+     <div class="side">
+       <select class="estado" data-id="${l.id}">${ESTADOS.map(e=>`<option value="${e}" ${e===l.estado?"selected":""}>${e.replace("_"," ")}</option>`).join("")}</select>
+     </div>
+   </div>`).join("");
+  c.querySelectorAll("select.estado").forEach(s=>s.onchange=async()=>{
+    s.disabled=true;
+    await api("inmoplus-panel",{key:KEY,action:"estado",id:s.dataset.id,estado:s.value});
+    const d=await api("inmoplus-panel",{key:KEY,action:"resumen"}); render(d);
+  });
+}
+function renderRec(d){
+  const v=(d.vencen||[]),f=(d.frios||[]);
+  let h="";
+  h+=`<div class="recbox"><h4>📅 Alquileres por vencer (${v.length})</h4>`+
+    (v.length?v.map(c=>`<div class="recitem"><b>${esc(c.inmueble_ref)}</b> · ${esc(c.inquilino)} — vence en ${c.dias} días${c.renta?" · "+eur(c.renta):""}</div>`).join(""):`<div class="recitem">Nada próximo.</div>`)+`</div>`;
+  h+=`<div class="recbox"><h4>❄️ Leads fríos · sin contacto +7 días (${f.length})</h4>`+
+    (f.length?f.map(l=>`<div class="recitem"><b>${esc(l.nombre)}</b> · ${esc(l.telefono)} — ${esc(l.operacion||"?")} en ${esc(l.zona||"?")} (${l.dias}d)</div>`).join(""):`<div class="recitem">Ninguno.</div>`)+`</div>`;
+  $("#recView").innerHTML=h;
+}
+$("#sendRec").onclick=async()=>{
+  $("#sendRec").textContent="Enviando…"; $("#sendRec").disabled=true;
+  const d=await api("inmoplus-recordatorios",{});
+  $("#sendRec").textContent=d.ok?"Enviado a Telegram ✓":"Error al enviar";
+  setTimeout(()=>{$("#sendRec").textContent="Enviar recordatorios a Telegram";$("#sendRec").disabled=false;},2500);
+};
+
+/* captar */
+$("#c_go").onclick=async()=>{
+  const nombre=$("#c_nombre").value.trim(),telefono=$("#c_tel").value.trim();
+  if(!nombre||!telefono){$("#c_out").innerHTML='<div class="out warn">Faltan nombre y teléfono.</div>';return;}
+  $("#c_out").innerHTML='<div class="out spin">Cualificando con IA…</div>';
+  const d=await api("inmoplus-captacion",{nombre,telefono,mensaje:$("#c_msg").value.trim(),origen:"panel"});
+  if(!d.ok){$("#c_out").innerHTML='<div class="out warn">'+(d.error||"Error")+'</div>';return;}
+  $("#c_out").innerHTML=`<div class="out"><span class="k">Puntuación:</span> ${stars(d.score)}
+<span class="k">Operación:</span> ${esc(d.operacion||"?")}  ·  <span class="k">Tipo:</span> ${esc(d.tipo||"?")}  ·  <span class="k">Zona:</span> ${esc(d.zona||"?")}${d.presupuesto_max?"  ·  hasta "+eur(d.presupuesto_max):""}
+<span class="k">Resumen IA:</span> ${esc(d.resumen||"—")}
+<span class="k">Siguiente paso:</span> ${esc(d.siguiente_paso||"")} → ${esc(d.agenda_url||"")}
+Guardado ✓ · avisado por Telegram</div>`;
+  $("#c_nombre").value="";$("#c_tel").value="";$("#c_msg").value="";
+  const r=await api("inmoplus-panel",{key:KEY,action:"resumen"}); render(r);
+};
+
+/* anuncio */
+$("#a_go").onclick=async()=>{
+  $("#a_out").innerHTML='<div class="spin">Redactando…</div>';
+  const d=await api("inmoplus-anuncio",{operacion:$("#a_op").value,tipo:$("#a_tipo").value.trim(),zona:$("#a_zona").value.trim(),m2:$("#a_m2").value.trim(),habitaciones:$("#a_hab").value.trim(),banos:$("#a_ban").value.trim(),precio:$("#a_precio").value.trim(),extras:$("#a_extras").value.split(",").map(x=>x.trim()).filter(Boolean)});
+  if(!d.ok){$("#a_out").innerHTML='<div class="out warn">'+(d.error||"Error")+'</div>';return;}
+  $("#a_out").innerHTML=`<div class="out"><span class="k">${esc(d.titulo||"")}</span>
+
+${esc(d.descripcion||"")}
+
+${(d.ficha||[]).map(x=>"• "+esc(x)).join("\n")}
+
+<span class="warn">${esc(d.nota||"")}</span></div>`;
+};
+
+/* documento */
+$("#d_go").onclick=async()=>{
+  const texto=$("#d_texto").value.trim();
+  if(!texto){$("#d_out").innerHTML='<div class="out warn">Pega el texto del documento.</div>';return;}
+  $("#d_out").innerHTML='<div class="spin">Leyendo…</div>';
+  const d=await api("inmoplus-extraer",{tipo:$("#d_tipo").value,texto});
+  if(!d.ok){$("#d_out").innerHTML='<div class="out warn">'+(d.error||"Error")+'</div>';return;}
+  const campos=Object.entries(d.campos||{}).map(([k,v])=>`<span class="k">${esc(k)}:</span> ${esc(v==null?"—":(typeof v==="object"?JSON.stringify(v):String(v)))}`).join("\n");
+  $("#d_out").innerHTML=`<div class="out">${campos}
+
+${(d.comprobaciones||[]).map(x=>"✓ "+esc(x)).join("\n")}
+
+<span class="warn">${esc(d.nota||"")}</span></div>`;
+};
+
+/* ---- propiedades (CMS) ---- */
+let PROPS=[], FOTOS=[], propsLoaded=false;
+
+async function loadProps(){
+  $("#pr_list").innerHTML='<div class="spin">Cargando…</div>';
+  const d=await api("inmoplus-propiedades",{key:KEY,action:"listar"});
+  if(!d.ok){$("#pr_list").innerHTML='<div class="out warn">'+esc(d.error||"Error al cargar")+'</div>';return;}
+  PROPS=d.propiedades||[]; renderProps();
+}
+function renderProps(){
+  $("#pr_count").textContent=PROPS.length;
+  if(!PROPS.length){$("#pr_list").innerHTML='<div class="spin">Aún no hay propiedades. Crea la primera a la izquierda.</div>';return;}
+  $("#pr_list").innerHTML=PROPS.map(p=>{
+    const ph=(p.fotos&&p.fotos[0])?`<img class="ph" src="${esc(p.fotos[0])}" alt="">`:`<div class="ph"></div>`;
+    return `<div class="prop">
+      ${ph}
+      <div>
+        <div class="nb">${esc(p.titulo)}</div>
+        <div class="mt">${esc(p.tipo)} · ${p.precio?eur(p.precio):"s/precio"}${p.zona?" · "+esc(p.zona):""}${p.m2?" · "+p.m2+" m²":""}</div>
+        <div class="badges">
+          <span class="tg ${p.publicada?"on":""}">${p.publicada?"Publicada":"Borrador"}</span>
+          ${p.destacada?'<span class="tg gold">Destacada</span>':''}
+          ${(p.fotos&&p.fotos.length)?`<span class="tg">${p.fotos.length} foto${p.fotos.length>1?"s":""}</span>`:''}
+        </div>
+      </div>
+      <div class="ops">
+        <button class="mini" data-edit="${p.id}">Editar</button>
+        <button class="mini" data-pub="${p.id}">${p.publicada?"Despublicar":"Publicar"}</button>
+        <button class="mini del" data-del="${p.id}">Eliminar</button>
+      </div>
+    </div>`;
+  }).join("");
+  $("#pr_list").querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editProp(b.dataset.edit));
+  $("#pr_list").querySelectorAll("[data-pub]").forEach(b=>b.onclick=()=>togglePub(b.dataset.pub));
+  $("#pr_list").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>delProp(b.dataset.del));
+}
+function resetPropForm(){
+  $("#pr_id").value="";FOTOS=[];
+  ["pr_titulo","pr_precio","pr_zona","pr_m2","pr_hab","pr_ban","pr_desc"].forEach(id=>$("#"+id).value="");
+  $("#pr_tipo").value="venta";$("#pr_pub").checked=false;$("#pr_dest").checked=false;
+  $("#propFormTitle").textContent="Nueva propiedad";$("#pr_msg").innerHTML="";renderThumbs();
+}
+function editProp(id){
+  const p=PROPS.find(x=>x.id===id);if(!p)return;
+  $("#pr_id").value=p.id;$("#pr_titulo").value=p.titulo||"";$("#pr_tipo").value=p.tipo||"venta";
+  $("#pr_precio").value=p.precio||"";$("#pr_zona").value=p.zona||"";$("#pr_m2").value=p.m2||"";
+  $("#pr_hab").value=p.habitaciones||"";$("#pr_ban").value=p.banos||"";$("#pr_desc").value=p.descripcion||"";
+  $("#pr_pub").checked=!!p.publicada;$("#pr_dest").checked=!!p.destacada;
+  FOTOS=Array.isArray(p.fotos)?p.fotos.slice():[];renderThumbs();
+  $("#propFormTitle").textContent="Editar propiedad";$("#pr_msg").innerHTML="";
+  $("#p_prop").scrollIntoView({behavior:"smooth"});
+}
+function renderThumbs(){
+  $("#pr_thumbs").innerHTML=FOTOS.map((u,i)=>`<div class="thumb"><img src="${esc(u)}" alt=""><button class="x" data-i="${i}">×</button></div>`).join("");
+  $("#pr_thumbs").querySelectorAll(".x").forEach(b=>b.onclick=()=>{FOTOS.splice(parseInt(b.dataset.i),1);renderThumbs();});
+}
+function toB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(file);});}
+async function uploadFiles(files){
+  for(const f of files){
+    if(!["image/jpeg","image/png","image/webp"].includes(f.type)){$("#pr_msg").innerHTML='<div class="out warn">'+esc(f.name)+': formato no permitido (usa JPG, PNG o WebP).</div>';continue;}
+    if(f.size>8*1024*1024){$("#pr_msg").innerHTML='<div class="out warn">'+esc(f.name)+' supera 8 MB.</div>';continue;}
+    $("#pr_msg").innerHTML='<div class="out spin">Subiendo '+esc(f.name)+'…</div>';
+    let b64;try{b64=await toB64(f);}catch(e){$("#pr_msg").innerHTML='<div class="out warn">No se pudo leer '+esc(f.name)+'.</div>';continue;}
+    const d=await api("inmoplus-propiedades",{key:KEY,action:"subir_foto",contentType:f.type,dataBase64:b64});
+    if(d.ok&&d.url){FOTOS.push(d.url);renderThumbs();$("#pr_msg").innerHTML="";}
+    else{$("#pr_msg").innerHTML='<div class="out warn">Error al subir: '+esc(d.detalle||d.error||"")+'</div>';}
+  }
+}
+$("#pr_drop").onclick=()=>$("#pr_file").click();
+$("#pr_file").onchange=e=>{uploadFiles([...e.target.files]);e.target.value="";};
+["dragover","dragenter"].forEach(ev=>$("#pr_drop").addEventListener(ev,e=>{e.preventDefault();$("#pr_drop").classList.add("over");}));
+["dragleave"].forEach(ev=>$("#pr_drop").addEventListener(ev,e=>{e.preventDefault();$("#pr_drop").classList.remove("over");}));
+$("#pr_drop").addEventListener("drop",e=>{e.preventDefault();$("#pr_drop").classList.remove("over");if(e.dataTransfer&&e.dataTransfer.files)uploadFiles([...e.dataTransfer.files]);});
+$("#pr_reset").onclick=resetPropForm;
+$("#pr_save").onclick=async()=>{
+  const titulo=$("#pr_titulo").value.trim();
+  if(!titulo){$("#pr_msg").innerHTML='<div class="out warn">Falta el título.</div>';return;}
+  $("#pr_save").disabled=true;$("#pr_msg").innerHTML='<div class="out spin">Guardando…</div>';
+  const prop={id:$("#pr_id").value||undefined,titulo,tipo:$("#pr_tipo").value,precio:$("#pr_precio").value.trim(),
+    zona:$("#pr_zona").value.trim(),m2:$("#pr_m2").value.trim(),habitaciones:$("#pr_hab").value.trim(),
+    banos:$("#pr_ban").value.trim(),descripcion:$("#pr_desc").value.trim(),fotos:FOTOS,
+    publicada:$("#pr_pub").checked,destacada:$("#pr_dest").checked};
+  const d=await api("inmoplus-propiedades",{key:KEY,action:"guardar",propiedad:prop});
+  $("#pr_save").disabled=false;
+  if(!d.ok){$("#pr_msg").innerHTML='<div class="out warn">'+esc(d.detalle||d.error||"Error al guardar")+'</div>';return;}
+  $("#pr_msg").innerHTML='<div class="out">Guardada ✓ ('+esc(d.modo||"")+')</div>';
+  resetPropForm();await loadProps();
+};
+async function togglePub(id){
+  const p=PROPS.find(x=>x.id===id);if(!p)return;
+  await api("inmoplus-propiedades",{key:KEY,action:"toggle",campo:"publicada",valor:!p.publicada});
+  await loadProps();
+}
+async function delProp(id){
+  const p=PROPS.find(x=>x.id===id);if(!p)return;
+  if(!confirm('¿Eliminar "'+p.titulo+'"? También se borran sus fotos.'))return;
+  await api("inmoplus-propiedades",{key:KEY,action:"eliminar",id});
+  await loadProps();
+}
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));}
+setInterval(()=>{const n=new Date();$("#clock")&&($("#clock").textContent=n.toLocaleDateString("es-ES")+" "+n.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}));},1000);
+</script>
+</body>
+</html>
